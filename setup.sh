@@ -2,6 +2,7 @@
 set -e
 
 ppas=(
+    ppa:cwchien/gradle
     ppa:webupd8team/java
 )
 
@@ -9,6 +10,7 @@ packages=(
     build-essential
     dconf-cli
     git
+    gradle
     mongodb-org
     nodejs
     oracle-java9-installer 
