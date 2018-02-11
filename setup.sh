@@ -49,13 +49,13 @@ function update() {
     echo "Updating Ubuntu"
     
     echo "====> Updating Package Cache"
-    sudo apt-get -qq update -y >/dev/null
+    sudo apt-get update >/dev/null
     
     echo "====> Updating Packages"
-    sudo apt-get -qq dist-upgrade -y >/dev/null
+    sudo apt-get dist-upgrade -y >/dev/null
     
     echo "====> Removing Obsolete Packages"
-    sudo apt-get -qq autoremove -y >/dev/null
+    sudo apt-get autoremove -y >/dev/null
 }
 
 function install_ppas() {
