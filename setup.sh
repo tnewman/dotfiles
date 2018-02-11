@@ -9,7 +9,6 @@ packages=(
     build-essential
     dconf-cli
     git
-    gradle
     mongodb-org
     nodejs
     oracle-java9-installer 
