@@ -13,7 +13,7 @@ packages=(
     gradle
     mongodb-org
     nodejs
-    oracle-java9-installer 
+    oracle-java9-installer
     oracle-java9-set-default
     python3-pip
     postgresql
@@ -49,13 +49,13 @@ function update() {
     echo "Updating Ubuntu"
     
     echo "====> Updating Package Cache"
-    sudo apt-get update >/dev/null
+    sudo apt-get update
     
     echo "====> Updating Packages"
-    sudo apt-get dist-upgrade -y >/dev/null
+    sudo apt-get dist-upgrade -y
     
     echo "====> Removing Obsolete Packages"
-    sudo apt-get autoremove -y >/dev/null
+    sudo apt-get autoremove -y
 }
 
 function install_ppas() {
@@ -73,14 +73,14 @@ function install_repos() {
     
     # Bootstrap wget
     echo "====> Installing wget (bootstrap)"
-    sudo apt-get install -qq -y wget >/dev/null
+    sudo apt-get install -qq -y wget
 
     echo "====> Installing NodeSource Repo"
-    wget -qO- https://deb.nodesource.com/setup_9.x | sudo bash - >/dev/null
+    wget -qO- https://deb.nodesource.com/setup_9.x | sudo bash -
     
     echo "====> Installing MongoDB Repo"
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-    sudo rm -f /etc/apt/sources.list.d/mongodb-org-3.6.list 
+    sudo rm -f /etc/apt/sources.list.d/mongodb-org-3.6.list
     echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee -a /etc/apt/sources.list.d/mongodb-org-3.6.list >/dev/null
 }
 
@@ -90,7 +90,7 @@ function install_packages() {
     for package in ${packages[@]}
     do
         echo "====> Installing $package"
-        sudo apt-get install -qq -y $package >/dev/null
+        sudo apt-get install -qq -y $package
     done
 }
 
@@ -153,7 +153,7 @@ function install_node_packages() {
     for package in ${node_packages[0]}
     do
         echo "====> Installing $package"
-        sudo npm install -g $package --unsafe >/dev/null
+        sudo npm install -g $package --unsafe
     done
 }
 
@@ -209,4 +209,3 @@ install_git_repos
 install_python3_packages
 install_node_packages
 install_configuration
-
