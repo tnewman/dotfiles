@@ -44,13 +44,13 @@ function update() {
     echo "Updating Ubuntu"
     
     echo "====> Updating Package Cache"
-    sudo apt-get -qq update -y
+    sudo apt-get -qq update -y >/dev/null
     
     echo "====> Updating Packages"
-    sudo apt-get -qq dist-upgrade -y
+    sudo apt-get -qq dist-upgrade -y >/dev/null
     
     echo "====> Removing Obsolete Packages"
-    sudo apt-get -qq autoremove -y
+    sudo apt-get -qq autoremove -y >/dev/null
 }
 
 function install_ppas() {
@@ -68,14 +68,15 @@ function install_repos() {
     
     # Bootstrap wget
     echo "====> Installing wget (bootstrap)"
-    sudo apt-get install -qq -y wget
+    sudo apt-get install -qq -y wget >/dev/null
 
     echo "====> Installing NodeSource Repo"
     wget -qO- https://deb.nodesource.com/setup_9.x | sudo bash - >/dev/null
     
     echo "====> Installing MongoDB Repo"
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-    sudo echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.6.list
+    sudo rm -f /etc/apt/sources.list.d/mongodb-org-3.6.list 
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee -a /etc/apt/sources.list.d/mongodb-org-3.6.list >/dev/null
 }
 
 function install_packages() {
@@ -84,7 +85,7 @@ function install_packages() {
     for package in ${packages[@]}
     do
         echo "====> Installing $package"
-        sudo apt-get install -qq -y $package
+        sudo apt-get install -qq -y $package >/dev/null
     done
 }
 
@@ -115,26 +116,6 @@ function install_tarballs() {
         
         echo "====> Removing $tarball"
         rm $tarball
-    done
-}
-
-function install_zips() {
-    echo "Installing Zips"
-    
-    echo "====> Moving to $app_directory"
-    cd $app_directory
-
-    for zip_url in ${zips[@]}
-    do
-        zip=${zip_url##*/}
-        echo "====> Downloading $zip_url"
-        wget --quiet $zip_url
-        
-        echo "====> Extracting $zip"
-        unzip -q $zip
-        
-        echo "====> Removing $zip"
-        rm $zip
     done
 }
 
@@ -196,6 +177,11 @@ function install_configuration() {
     echo "Installing Configuration"
     install_terminal_profile
     install_vim_profile
+    
+    echo "====> Installing BASH Profile"
+    cp $script_directory/.bash_profile $app_directory
+    ln -f -s $app_directory/.bash_profile ~/.bash_profile
+    source ~/.bash_profile
 }
 
 install_ppas
