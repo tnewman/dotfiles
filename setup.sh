@@ -7,27 +7,25 @@ ppas=(
 
 packages=(
     build-essential
-    git
-    vim
-    wget
     dconf-cli
-    python3-pip
+    git
+    gradle
     mongodb-org
-    postgresql
-    postgresql-contrib
+    nodejs
     oracle-java9-installer 
     oracle-java9-set-default
+    python3-pip
+    postgresql
+    postgresql-contrib
+    vim
+    wget
 )
+   
 
 tarballs=(
     https://download.jetbrains.com/idea/ideaIU-2017.3.4-no-jdk.tar.gz
     https://download.jetbrains.com/python/pycharm-professional-2017.3.3.tar.gz
     https://download.jetbrains.com/webstorm/WebStorm-2017.3.4.tar.gz
-    https://nodejs.org/dist/v9.5.0/node-v9.5.0-linux-x64.tar.xz
-)
-
-zips=(
-    https://services.gradle.org/distributions/gradle-4.5.1-all.zip
 )
 
 git_repos=(
@@ -68,6 +66,10 @@ function install_ppas() {
 function install_repos() {
     echo "Installing Repos"
     
+    # Bootstrap wget
+    echo "====> Installing wget (bootstrap)"
+    sudo apt-get install -qq -y wget
+
     echo "====> Installing NodeSource Repo"
     wget -qO- https://deb.nodesource.com/setup_9.x | sudo bash - >/dev/null
     
@@ -82,7 +84,7 @@ function install_packages() {
     for package in ${packages[@]}
     do
         echo "====> Installing $package"
-        sudo apt-get install -qq -y $package >/dev/null
+        sudo apt-get install -qq -y $package
     done
 }
 
@@ -202,7 +204,6 @@ update
 install_packages
 initialize_app_directory
 install_tarballs
-install_zips
 install_git_repos
 install_python3_packages
 install_configuration
