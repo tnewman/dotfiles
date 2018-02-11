@@ -153,7 +153,7 @@ function install_node_packages() {
     for package in ${node_packages[0]}
     do
         echo "====> Installing $package"
-        npm install -g $package
+        sudo npm install -g $package
     done
 }
 
