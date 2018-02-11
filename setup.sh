@@ -38,6 +38,10 @@ python3_packages=(
     virtualenv
 )
 
+node_packages=(
+    @angular/cli
+)
+
 app_directory=~/.dotfiles
 script_directory=$(pwd)
 
@@ -143,6 +147,16 @@ function install_python3_packages() {
     done
 }
 
+function install_node_packages() {
+    echo "Installing Node Packages"
+
+    for package in ${node_packages[0]}
+    do
+        echo "====> Installing $package"
+        npm install -g $package
+    done
+}
+
 function install_terminal_profile() {
     echo "====> Create SolarizedDark Terminal Profile"
     dconf write /org/gnome/terminal/legacy/profiles:/:be8a3d5c-f849-4996-817d-bb694f75fca5/visible-name "'Solarized Dark'"
@@ -193,5 +207,6 @@ initialize_app_directory
 install_tarballs
 install_git_repos
 install_python3_packages
+install_node_packages
 install_configuration
 
