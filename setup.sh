@@ -160,16 +160,19 @@ function install_node_packages() {
 function install_terminal_profile() {
     echo "====> Create SolarizedDark Terminal Profile"
     dconf write /org/gnome/terminal/legacy/profiles:/:be8a3d5c-f849-4996-817d-bb694f75fca5/visible-name "'Solarized Dark'"
+    dconf write /org/gnome/terminal/legacy/profiles:/list "['be8a3d5c-f849-4996-817d-bb694f75fca5']"
 
     echo "====> Set Default Terminal Profile to Solarized Dark"
     dconf write /org/gnome/terminal/legacy/profiles:/default "'be8a3d5c-f849-4996-817d-bb694f75fca5'"
     
     echo "====> Installing Solarized Terminal Colors"
     $app_directory/gnome-terminal-colors-solarized/install.sh \
-        --profile "Solarized Dark" --scheme dark --skip-dircolors
+        --profile "Solarized Dark" --scheme dark \
+        --skip-dircolors
 
     echo "====> Setting Terminal Transparency"
     dconf write /org/gnome/terminal/legacy/profiles:/:be8a3d5c-f849-4996-817d-bb694f75fca5/use-theme-transparency false
+    dconf write /org/gnome/terminal/legacy/profiles:/:be8a3d5c-f849-4996-817d-bb694f75fca5/use-transparent-background true
     dconf write /org/gnome/terminal/legacy/profiles:/:be8a3d5c-f849-4996-817d-bb694f75fca5/background-transparency-percent 10
 }
 
