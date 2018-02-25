@@ -19,6 +19,7 @@ packages=(
     python3-pip
     postgresql
     postgresql-contrib
+    ubuntu-restricted-extras
     vim
     wget
 )
