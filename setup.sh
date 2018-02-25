@@ -64,7 +64,7 @@ function install_ppas() {
     for ppa in ${ppas[@]}
     do
         echo "====> Installing $ppa"
-        sudo add-apt-repository -y $ppas
+        sudo add-apt-repository -y $ppa
     done
 }
 
