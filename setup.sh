@@ -9,6 +9,7 @@ ppas=(
 packages=(
     build-essential
     dconf-cli
+    docker-ce
     git
     gradle
     mongodb-org
@@ -92,6 +93,23 @@ function install_packages() {
         echo "====> Installing $package"
         sudo apt-get install -qq -y $package
     done
+}
+
+function install_docker_repo() {
+    echo "Installing Docker Repository"
+
+    echo "====> Installing Prerequisites"
+    sudo apt-get install -qq -y apt-transport-https ca-certificates curl \
+        software-properties-common
+
+    echo "====> Adding Docker GPG Key"
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+    echo "====> Adding Docker Repository"
+    sudo add-apt-repository \
+           "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+           $(lsb_release -cs) \
+           stable"
 }
 
 function initialize_app_directory() {
@@ -204,6 +222,7 @@ function install_configuration() {
 
 install_ppas
 install_repos
+install_docker_repo
 update
 install_packages
 initialize_app_directory
