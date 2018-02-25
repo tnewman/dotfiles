@@ -25,9 +25,7 @@ packages=(
    
 
 tarballs=(
-    https://download.jetbrains.com/idea/ideaIU-2017.3.4-no-jdk.tar.gz
-    https://download.jetbrains.com/python/pycharm-professional-2017.3.3.tar.gz
-    https://download.jetbrains.com/webstorm/WebStorm-2017.3.4.tar.gz
+    https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.6.2914.tar.gz
 )
 
 git_repos=(
