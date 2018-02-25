@@ -19,7 +19,6 @@ packages=(
     python3-pip
     postgresql
     postgresql-contrib
-    texlive-xetex
     ubuntu-restricted-extras
     vim
     wget
