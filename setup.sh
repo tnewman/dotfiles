@@ -35,6 +35,7 @@ zips=(
 
 bins=(
     https://github.com/kubernetes/minikube/releases/download/v0.27.0/minikube-linux-amd64
+    https://storage.googleapis.com/kubernetes-release/release/v1.10.3/bin/linux/amd64/kubectl
 )
 
 git_repos=(
