@@ -13,21 +13,28 @@ packages=(
     docker-ce
     git
     gradle
+    libvirt-bin
     oracle-java10-installer
     oracle-java10-set-default
     python3-pip
+    qemu-kvm
     ubuntu-restricted-extras
     vim
+    virt-manager
     wget
 )
    
 
 tarballs=(
-    https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.6.2914.tar.gz
+    https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.8.3868.tar.gz
 )
 
 zips=(
     https://dl.google.com/dl/android/studio/ide-zips/3.1.2.0/android-studio-ide-173.4720617-linux.zip
+)
+
+bins=(
+    https://github.com/kubernetes/minikube/releases/download/v0.27.0/minikube-linux-amd64
 )
 
 git_repos=(
@@ -40,6 +47,7 @@ python3_packages=(
 )
 
 app_directory=~/.dotfiles
+bin_directory=$app_directory/bin
 script_directory=$(pwd)
 
 function install_ppas() {
@@ -100,6 +108,9 @@ function initialize_app_directory() {
 
     echo "====> Creating $app_directory"
     mkdir -p $app_directory
+
+    echo "====> Creating $bin_directory"
+    mkdir -p $bin_directory
 }
 
 function install_tarballs() {
@@ -131,14 +142,30 @@ function install_zips() {
     for zip_url in ${zips[@]}
     do
         zip=${zip_url##*/}
-	echo "====> Downloading $zip_url"
-	wget --quiet $zip_url
+	    echo "====> Downloading $zip_url"
+	    wget --quiet $zip_url
 
-	echo "====> Extracting $zip"
-	unzip $zip
+	    echo "====> Extracting $zip"
+	    unzip -qq $zip
 
-	echo "====> Removing $zip"
-	rm $zip
+	    echo "====> Removing $zip"
+	    rm $zip
+    done
+}
+
+function install_bins() {
+    echo "Installing Bins"
+
+    echo "====> Moving to $bin_directory"
+    cd $bin_directory
+
+    for bin_url in ${bins[@]}
+    do
+        bin=${bin_url##*/}
+        echo "====> Downloading $bin"
+        wget --quiet $bin_url
+        echo "====> Making $bin Executable"
+        chmod +x $bin
     done
 }
 
@@ -204,10 +231,11 @@ function install_configuration() {
     install_terminal_profile
     install_vim_profile
     
-    echo "====> Installing BASH Profile"
-    cp $script_directory/.bash_profile $app_directory
-    ln -f -s $app_directory/.bash_profile ~/.bash_profile
-    source ~/.bash_profile
+    echo "====> Installing .bashrc"
+    cp $script_directory/.bashrc $app_directory
+    rm ~/.bashrc
+    ln -f -s $app_directory/.bashrc ~/.bashrc
+    source ~/.bashrc
 
     echo "====> Add User to Docker Group"
     sudo usermod -aG docker $USER
@@ -220,6 +248,8 @@ install_packages
 initialize_app_directory
 install_tarballs
 install_zips
+install_bins
 install_git_repos
 install_python3_packages
 install_configuration
+
