@@ -168,6 +168,9 @@ function install_bins() {
         echo "====> Making $bin Executable"
         chmod +x $bin
     done
+
+    echo "====> Renaming minikube"
+    mv $bin_directory/minikube-linux-amd64 minikube
 }
 
 function install_git_repos() {
