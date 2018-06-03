@@ -3,22 +3,19 @@ set -e
 
 ppas=(
     ppa:cwchien/gradle
-    ppa:webupd8team/java
+    ppa:linuxuprising/java
 )
 
 packages=(
     build-essential
     dconf-cli
+    curl
     docker-ce
     git
     gradle
-    mongodb-org
-    nodejs
-    oracle-java9-installer
-    oracle-java9-set-default
+    oracle-java10-installer
+    oracle-java10-set-default
     python3-pip
-    postgresql
-    postgresql-contrib
     ubuntu-restricted-extras
     vim
     wget
@@ -27,6 +24,10 @@ packages=(
 
 tarballs=(
     https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.6.2914.tar.gz
+)
+
+zips=(
+    https://dl.google.com/dl/android/studio/ide-zips/3.1.2.0/android-studio-ide-173.4720617-linux.zip
 )
 
 git_repos=(
@@ -38,25 +39,8 @@ python3_packages=(
     virtualenv
 )
 
-node_packages=(
-    @angular/cli
-)
-
 app_directory=~/.dotfiles
 script_directory=$(pwd)
-
-function update() {
-    echo "Updating Ubuntu"
-    
-    echo "====> Updating Package Cache"
-    sudo apt-get update
-    
-    echo "====> Updating Packages"
-    sudo apt-get dist-upgrade -y
-    
-    echo "====> Removing Obsolete Packages"
-    sudo apt-get autoremove -y
-}
 
 function install_ppas() {
     echo "Installing PPAs"
@@ -65,32 +49,6 @@ function install_ppas() {
     do
         echo "====> Installing $ppa"
         sudo add-apt-repository -y $ppa
-    done
-}
-
-function install_repos() {
-    echo "Installing Repos"
-    
-    # Bootstrap wget
-    echo "====> Installing wget (bootstrap)"
-    sudo apt-get install -qq -y wget
-
-    echo "====> Installing NodeSource Repo"
-    wget -qO- https://deb.nodesource.com/setup_9.x | sudo bash -
-    
-    echo "====> Installing MongoDB Repo"
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
-    sudo rm -f /etc/apt/sources.list.d/mongodb-org-3.6.list
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.6 multiverse" | sudo tee -a /etc/apt/sources.list.d/mongodb-org-3.6.list >/dev/null
-}
-
-function install_packages() {
-    echo "Installing Packages"
-    
-    for package in ${packages[@]}
-    do
-        echo "====> Installing $package"
-        sudo apt-get install -qq -y $package
     done
 }
 
@@ -108,7 +66,30 @@ function install_docker_repo() {
     sudo add-apt-repository \
            "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
            $(lsb_release -cs) \
-           stable"
+           edge"
+}
+
+function update() {
+    echo "Updating Ubuntu"
+    
+    echo "====> Updating Package Cache"
+    sudo apt-get update
+    
+    echo "====> Updating Packages"
+    sudo apt-get dist-upgrade -y
+    
+    echo "====> Removing Obsolete Packages"
+    sudo apt-get autoremove -y
+}
+
+function install_packages() {
+    echo "Installing Packages"
+    
+    for package in ${packages[@]}
+    do
+        echo "====> Installing $package"
+        sudo apt-get install -qq -y $package
+    done
 }
 
 function initialize_app_directory() {
@@ -141,6 +122,26 @@ function install_tarballs() {
     done
 }
 
+function install_zips() {
+    echo "Installing Zips"
+    
+    echo "====> Moving to $app_directory"
+    cd $app_directory
+
+    for zip_url in ${zips[@]}
+    do
+        zip=${zip_url##*/}
+	echo "====> Downloading $zip_url"
+	wget --quiet $zip_url
+
+	echo "====> Extracting $zip"
+	unzip $zip
+
+	echo "====> Removing $zip"
+	rm $zip
+    done
+}
+
 function install_git_repos() {
     echo "Installing Git Repos"
     
@@ -161,16 +162,6 @@ function install_python3_packages() {
     do
         echo "====> Installing $package"
         pip3 install -q --user $package
-    done
-}
-
-function install_node_packages() {
-    echo "Installing Node Packages"
-
-    for package in ${node_packages[0]}
-    do
-        echo "====> Installing $package"
-        sudo npm install -g $package --unsafe
     done
 }
 
@@ -217,16 +208,18 @@ function install_configuration() {
     cp $script_directory/.bash_profile $app_directory
     ln -f -s $app_directory/.bash_profile ~/.bash_profile
     source ~/.bash_profile
+
+    echo "====> Add User to Docker Group"
+    sudo usermod -aG docker $USER
 }
 
 install_ppas
-install_repos
 install_docker_repo
 update
 install_packages
 initialize_app_directory
 install_tarballs
+install_zips
 install_git_repos
 install_python3_packages
-install_node_packages
 install_configuration
