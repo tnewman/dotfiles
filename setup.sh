@@ -13,14 +13,12 @@ packages=(
     docker-ce
     git
     gradle
-    libvirt-bin
     oracle-java10-installer
     oracle-java10-set-default
     python3-pip
-    qemu-kvm
     ubuntu-restricted-extras
     vim
-    virt-manager
+    virtualbox
     wget
 )
    
