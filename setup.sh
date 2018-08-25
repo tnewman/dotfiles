@@ -41,7 +41,7 @@ git_repos=(
 )
 
 commands=(
-    curl https://sh.rustup.rs -sSf | sh
+    "curl https://sh.rustup.rs -sSf | sh"
 )
 
 python3_packages=(
@@ -264,6 +264,7 @@ install_tarballs
 install_zips
 install_bins
 install_git_repos
+install_commands
 install_python3_packages
 install_configuration
 
