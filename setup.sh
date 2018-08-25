@@ -40,6 +40,10 @@ git_repos=(
     https://github.com/altercation/vim-colors-solarized.git
 )
 
+commands=(
+    curl https://sh.rustup.rs -sSf | sh
+)
+
 python3_packages=(
     virtualenv
 )
@@ -180,6 +184,15 @@ function install_git_repos() {
     do
         echo "====> Cloning $repo_url"
 	git clone -q $repo_url
+    done
+}
+
+function install_commands() {
+    echo "Installing Commands"
+
+    for cmd in ${commands[@]}
+    do
+        echo "====> Installing $cmd"
     done
 }
 
