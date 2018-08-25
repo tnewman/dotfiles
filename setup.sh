@@ -3,7 +3,6 @@ set -e
 
 ppas=(
     ppa:cwchien/gradle
-    ppa:linuxuprising/java
 )
 
 packages=(
@@ -13,8 +12,7 @@ packages=(
     docker-ce
     git
     gradle
-    oracle-java10-installer
-    oracle-java10-set-default
+    openjdk-11-jdk
     python3-pip
     ubuntu-restricted-extras
     vim
