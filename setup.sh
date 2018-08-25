@@ -40,10 +40,6 @@ git_repos=(
     https://github.com/altercation/vim-colors-solarized.git
 )
 
-commands=(
-    "curl https://sh.rustup.rs -sSf | sh"
-)
-
 python3_packages=(
     virtualenv
 )
@@ -264,7 +260,6 @@ install_tarballs
 install_zips
 install_bins
 install_git_repos
-install_commands
 install_python3_packages
 install_configuration
 
