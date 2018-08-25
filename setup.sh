@@ -12,6 +12,7 @@ packages=(
     docker-ce
     git
     gradle
+    nodejs
     openjdk-11-jdk
     python3-pip
     ubuntu-restricted-extras
