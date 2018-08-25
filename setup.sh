@@ -24,7 +24,7 @@ packages=(
    
 
 tarballs=(
-    https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.8.3868.tar.gz
+    https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.11.4231.tar.gz
 )
 
 zips=(
