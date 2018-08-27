@@ -1,0 +1,91 @@
+---
+- name: Add APT Signing Keys
+  become: true
+  apt_key:
+    url: "{{ item }}"
+  with_items:
+    - https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    - https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    - https://download.docker.com/linux/ubuntu/gpg
+
+- name: Add Repositories
+  become: true
+  apt_repository:
+    repo: "{{ item }}"
+  with_items:
+    - "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+    - "deb https://deb.nodesource.com/node_10.x {{ ansible_lsb.codename}} main"
+    - "deb https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable"
+
+- name: Install Packages
+  become: true
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - build-essential
+    - ca-certificates
+    - cmake
+    - dconf-cli
+    - curl
+    - docker-ce
+    - git
+    - kubectl
+    - nodejs
+    - openjdk-11-jdk
+    - python3-pip
+    - python3-virtualenv
+    - software-properties-common
+    - ubuntu-restricted-extras
+    - vim
+    - virtualbox
+    - wget
+
+- name: Upgrade Packages
+  become: true
+  apt:
+    autoremove: yes
+    update_cache: yes
+    upgrade: dist 
+
+- name: Create Local Bin
+  file:
+    path: ~/.local/bin
+    state: directory
+
+- name: Install Minikube
+  get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: "~/.local/bin/minikube"
+    mode: 0755
+
+- name: Create Local Opt
+  file:
+    path: ~/.local/opt
+    state: directory
+
+- name: Check if JetBrains Toolbox Exists
+  stat:
+    path: ~/.local/opt/jetbrains-toolbox-1.11.4231
+  register: jetbrains_toolbox_result
+
+- name: Install JetBrains Toolbox
+  unarchive:
+    src: https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.11.4231.tar.gz
+    dest: ~/.local/opt
+    remote_src: true
+  when: jetbrains_toolbox_result.stat.exists == False
+
+- name: Check if Android Studio Exists
+  stat:
+    path: ~/.local/opt/android-studio
+  register: android_studio_result
+
+- name: Install Android Studio
+  unarchive:
+    src: https://dl.google.com/dl/android/studio/ide-zips/3.1.4.0/android-studio-ide-173.4907809-linux.zip
+    dest: ~/.local/opt
+    remote_src: true
+  when: android_studio_result.stat == False
+
