@@ -89,3 +89,11 @@
     remote_src: true
   when: android_studio_result.stat == False
 
+- name: Install Configuration Files
+  copy:
+    src: "{{ item }}"
+    dest: "~/{{ item }}"
+  with_items:
+  - .bashrc
+  - .vimrc
+
