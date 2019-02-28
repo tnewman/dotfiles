@@ -45,7 +45,8 @@ packages=(
 
 bins=(
     https://storage.googleapis.com/minikube/releases/latest/docker-machine-driver-kvm2
-    https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64)
+    https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+)
 
 function install_apt_keys() {
     echo "Installing APT Keys"
