@@ -11,6 +11,7 @@ apt_keys=(
     "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
     "https://download.docker.com/linux/ubuntu/gpg"
     "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    "https://packages.microsoft.com/keys/microsoft.asc"
 )
 
 repos=(
@@ -18,11 +19,13 @@ repos=(
     "deb https://deb.nodesource.com/node_${node_version}.x $distro main"
     "deb-src https://deb.nodesource.com/node_${node_version}.x $distro main"
     "deb https://download.docker.com/linux/ubuntu $distro stable"
+    "deb https://packages.microsoft.com/repos/vscode stable main"
 )
 
 packages=(
     bridge-utils
     build-essential
+    code
     containerd.io
     curl
     default-jdk
@@ -120,19 +123,6 @@ function install_bins() {
     mv $bin_directory/minikube-linux-amd64 minikube
 }
 
-function install_jetbrains_toolbox() {
-    echo "Installing Jetbrains Toolbox"
-    if [ -d ~/.local/share/JetBrains/Toolbox ]; then
-        echo "====> Jetbrains Toolbox Already Exists (Skipping Installation)"
-    else
-        echo "====> Installing Jetbrains Toolbox"
-        toolbox_url=$(wget -qO- "https://data.services.jetbrains.com//products/releases?code=TBA&latest=true&type=release" | jq -r '.TBA[0].downloads.linux.link')
-        wget -qO- $toolbox_url | tar -zxO --wildcards --no-anchored 'jetbrains-toolbox' > /tmp/jetbrains-toolbox
-        chmod +x /tmp/jetbrains-toolbox
-        /tmp/jetbrains-toolbox &
-    fi
-}
-
 function install_configuration() {
     echo "Installing Configuration"
     
@@ -165,6 +155,5 @@ update
 install_packages
 initialize_app_directory
 install_bins
-install_jetbrains_toolbox
 install_configuration
 
