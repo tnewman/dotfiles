@@ -51,6 +51,12 @@ bins=(
     https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 )
 
+vs_code_extensions=(
+    dbaeumer.vscode-eslint
+    ms-python.python
+    ms-vscode.cpptools
+)
+
 function install_apt_keys() {
     echo "Installing APT Keys"
 
@@ -124,6 +130,16 @@ function install_bins() {
     mv $bin_directory/minikube-linux-amd64 minikube
 }
 
+function install_vs_code_extensions() {
+    echo "Installing VS Code Extensions"
+
+    for vs_code_extension in ${vs_code_extensions[@]}
+    do
+        echo "====> Installing $vs_code_extension"
+        code --install-extension $vs_code_extension
+    done
+}
+
 function install_configuration() {
     echo "Installing Configuration"
     
@@ -156,5 +172,6 @@ update
 install_packages
 initialize_app_directory
 install_bins
+install_vs_code_extensions
 install_configuration
 
