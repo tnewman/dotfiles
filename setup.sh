@@ -55,6 +55,7 @@ bins=(
 
 vs_code_extensions=(
     dbaeumer.vscode-eslint
+    EditorConfig.EditorConfig
     ms-python.python
     ms-vscode.cpptools
 )
