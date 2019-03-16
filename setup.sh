@@ -38,9 +38,11 @@ packages=(
     libvirt-clients
     libvirt-daemon-system
     nodejs
+    postgresql
     python3-pip
     python3-venv
     qemu-kvm
+    redis-server
     ubuntu-restricted-extras
     vim
     virt-manager
