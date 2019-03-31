@@ -19,7 +19,9 @@ fi
 pacman -Sy --noconfirm reflector
 echo "Configuring Mirror List"
 reflector --country 'United States' --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist
-pacstrap /mnt amd-ucode base intel-ucode kate konsole firefox networkmanager plasma reflector sddm sudo
+
+pacstrap /mnt amd-ucode base intel-ucode kate konsole firefox networkmanager noto-fonts plasma reflector sddm sudo \
+    ttf-dejavu ttf-croscore ttf-liberation
 
 genfstab -U /mnt > /mnt/etc/fstab
 
