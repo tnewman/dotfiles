@@ -62,6 +62,10 @@ systemctl enable sddm.service
 echo "Enabling Network Manager"
 systemctl enable NetworkManager.service
 
+echo "Enabling Uncomplicated Firewall"
+systemctl enable ufw.service
+ufw enable
+
 echo "Adding Wheel to Sudoers"
 echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
 

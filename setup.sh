@@ -3,102 +3,50 @@ set -e
 
 app_directory=~/.dotfiles
 bin_directory=$app_directory/bin
-distro=$(lsb_release -s -c)
 node_version=10
 script_directory=$(pwd)
 
-apt_keys=(
-    "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
-    "https://download.docker.com/linux/ubuntu/gpg"
-    "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
-    "https://packages.microsoft.com/keys/microsoft.asc"
-)
-
-repos=(
-    "deb https://apt.kubernetes.io/ kubernetes-xenial main"
-    "deb https://deb.nodesource.com/node_${node_version}.x $distro main"
-    "deb-src https://deb.nodesource.com/node_${node_version}.x $distro main"
-    "deb https://download.docker.com/linux/ubuntu $distro stable"
-    "deb https://packages.microsoft.com/repos/vscode stable main"
-)
-
 packages=(
+    base-devel
     bridge-utils
-    build-essential
     code
-    containerd.io
-    curl
-    default-jdk
-    docker-ce
-    docker-ce-cli
-    gconf2
+    dnsmasq
+    docker
+    ebtables
     git
-    jq
     kubectl
-    libvirt-clients
-    libvirt-daemon-system
-    nodejs
-    postgresql
-    python3-pip
-    python3-venv
-    qemu-kvm
-    redis-server
-    ubuntu-restricted-extras
+    libvirt
+    minikube
+    openbsd-netcat
+    qemu
+    vde2
     vim
     virt-manager
 )
 
 bins=(
     https://storage.googleapis.com/minikube/releases/latest/docker-machine-driver-kvm2
-    https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+)
+
+scripts=(
+    
 )
 
 vs_code_extensions=(
     dbaeumer.vscode-eslint
     EditorConfig.EditorConfig
-    ms-python.python
-    ms-vscode.cpptools
 )
 
-function install_apt_keys() {
-    echo "Installing APT Keys"
-
-    for apt_key in ${apt_keys[@]}
-    do
-        echo "====> Installing $apt_key"
-        wget -qO- $apt_key | sudo apt-key add -
-    done
-}
-
-function install_repos() {
-    echo "Installing APT Repos"
-
-    sudo rm -f /etc/apt/sources.list.d/dotfiles.list
-
-    for repo in "${repos[@]}"
-    do
-        echo "====> Installing $repo"
-        echo "$repo" | sudo tee -a /etc/apt/sources.list.d/dotfiles.list > /dev/null
-    done
-}
-
 function update() {
-    echo "Updating Ubuntu"
+    echo "Upgrading Arch"
 
-    echo "====> Updating Package Cache"
-    sudo apt-get update
-
-    echo "====> Updating Packages"
-    sudo apt-get dist-upgrade -y
-
-    echo "====> Removing Obsolete Packages"
-    sudo apt-get autoremove -y
+    echo "====> Upgrading Arch"
+    sudo pacman -Syu --noconfirm
 }
 
 function install_packages() {
     echo "Installing Packages"
-    sudo apt-get install -qq -y ${packages[@]}
-
+    sudo pacman -S --needed --noconfirm ${packages[@]}
 }
 
 function initialize_app_directory() {
@@ -124,13 +72,14 @@ function install_bins() {
     do
         bin=${bin_url##*/}
         echo "====> Downloading $bin"
-        wget --quiet $bin_url
+        curl -o $bin $bin_url
         echo "====> Making $bin Executable"
         chmod +x $bin
     done
+}
 
-    echo "====> Renaming minikube"
-    mv $bin_directory/minikube-linux-amd64 minikube
+function install_nvm() {
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 }
 
 function install_vs_code_extensions() {
@@ -145,36 +94,42 @@ function install_vs_code_extensions() {
 
 function install_configuration() {
     echo "Installing Configuration"
-    
-    echo "====> Installing .vimrc"
-    cp $script_directory/.vimrc $app_directory
-    ln -f -s $app_directory/.vimrc ~/.vimrc
 
-    echo "====> Installing .bashrc"
-    cp $script_directory/.bashrc $app_directory
-    rm ~/.bashrc
-    ln -f -s $app_directory/.bashrc ~/.bashrc
+    echo "====> Moving to $script_directory"
+    cd $script_directory
+
+    echo "====> Copying .bashrc"
+    cp .bashrc $app_directory
+    bashrc_path="source $app_directory/.bashrc"
+    grep -qxF "$bashrc_path" ~/.bashrc || echo "$bashrc_path" >> ~/.bashrc
     source ~/.bashrc
 
-    echo "====> Setting Terminal Transparency"
-    gconftool-2 --set /apps/gnome-terminal/profiles/Default/background_darkness --type=float 0.50
+    echo "====> Copying .vimrc"
+    cp .vimrc $app_directory
+    ln -f -s $app_directory/.vimrc ~/.vimrc
 
-    echo "====> Add User to Docker Group"
+    echo "====> Add User ($USER) to Docker Group"
     sudo usermod -aG docker $USER
-    
-    echo "====> Add User to libvirt Group"
+
+    echo "====> Add User ($USER) to libvirt Group"
     sudo usermod -aG libvirt $USER
-    
+
+    echo "====> Start and Enable Docker"
+    sudo systemctl enable docker
+    sudo systemctl start docker
+
+    echo "====> Start and Enable libvirt"
+    sudo systemctl enable libvirtd
+    sudo systemctl start libvirtd
+
     echo "====> Enable Minikube KVM Driver"
     minikube config set vm-driver kvm2
 }
 
-install_apt_keys
-install_repos
 update
 install_packages
 initialize_app_directory
 install_bins
+install_nvm
 install_vs_code_extensions
 install_configuration
-
