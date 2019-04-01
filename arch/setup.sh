@@ -28,4 +28,5 @@ genfstab -U /mnt > /mnt/etc/fstab
 
 cp chroot.sh /mnt/chroot.sh
 arch-chroot /mnt ./chroot.sh
-rm chroot.sh
+rm /mnt/chroot.sh
+

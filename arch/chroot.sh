@@ -64,3 +64,4 @@ systemctl enable NetworkManager.service
 
 echo "Adding Wheel to Sudoers"
 echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
+
