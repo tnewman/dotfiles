@@ -24,6 +24,9 @@ echo "127.0.0.1 localhost
 ::1 localhost
 " > /etc/hosts
 
+echo "Configuring Fuse"
+echo "fuse" > /etc/modules-load.d/fuse.conf
+
 echo "Configuring systemd-boot"
 bootctl install
 
@@ -42,7 +45,7 @@ linux /vmlinuz-linux
 initrd /amd-ucode.img
 initrd /intel-ucode.img
 initrd /initramfs-linux.img
-options root=LABEL=root" > /boot/loader/entries/arch.conf
+options root=LABEL=root amd_iommu=on intel_iommu=on" > /boot/loader/entries/arch.conf
 
 echo "Configuring Pacman Reflector Hook"
 echo "[Trigger]
