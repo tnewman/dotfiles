@@ -45,7 +45,7 @@ linux /vmlinuz-linux
 initrd /amd-ucode.img
 initrd /intel-ucode.img
 initrd /initramfs-linux.img
-options root=LABEL=root amd_iommu=on intel_iommu=on" > /boot/loader/entries/arch.conf
+options root=LABEL=root resume=LABEL=swap amd_iommu=on intel_iommu=on" > /boot/loader/entries/arch.conf
 
 echo "Configuring Pacman Reflector Hook"
 echo "[Trigger]
