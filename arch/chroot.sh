@@ -67,7 +67,17 @@ systemctl enable NetworkManager.service
 
 echo "Enabling Uncomplicated Firewall"
 systemctl enable ufw.service
-ufw enable
+
+echo "# /etc/ufw/ufw.conf
+#
+
+# Set to yes to start on boot. If setting this remotely, be sure to add a rule
+# to allow your remote connection before starting ufw. Eg: 'ufw allow 22/tcp'
+ENABLED=yes
+
+# Please use the 'ufw' command to set the loglevel. Eg: 'ufw logging medium'.
+# See 'man ufw' for details.
+LOGLEVEL=low" > /etc/ufw/ufw.conf
 
 echo "Adding Wheel to Sudoers"
 echo "%wheel ALL=(ALL) ALL" > /etc/sudoers.d/wheel
