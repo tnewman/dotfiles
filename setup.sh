@@ -18,6 +18,8 @@ packages=(
     libvirt
     minikube
     openbsd-netcat
+    python
+    python-pip
     qemu
     vde2
     vim
