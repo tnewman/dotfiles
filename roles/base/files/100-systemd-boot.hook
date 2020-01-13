@@ -1,0 +1,13 @@
+[Trigger]
+Type = Package
+Operation = Upgrade
+Target = systemd
+[Action]
+Description = Updating systemd-boot
+When = PostTransaction
+Exec = /usr/bin/bootctl update
+
+[Action]
+Description = Updating systemd-boot
+When = PostTransaction
+Exec = /usr/bin/bootctl update

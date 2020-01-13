@@ -1,0 +1,54 @@
+- name: installing base packages
+  pacman:
+    name:
+      - amd-ucode
+      - ansible
+      - base
+      - base-devel
+      - fwupd
+      - intel-ucode
+      - sudo
+      - reflector
+    state: present
+
+- name: create Arch bootloader entry
+  copy:
+    src: arch.conf
+    dest: /boot/loader/entries/arch.conf
+  notify:
+    install systemdboot
+
+- name: create systemd-boot Pacman hook
+  copy:
+    src: 100-systemd-boot.hook
+    dest: /etc/pacman.d/hooks/100-systemd-boot.hook
+
+- name: set hostname
+  copy:
+    content: tom-desktop-linux
+    dest: /etc/hostname
+
+- name: set timezone
+  timezone:
+    name: America/Detroit
+  notify:
+    - enable network time sync
+    - sync hardware clock
+
+- name: enable en_US locale
+  lineinfile:
+    path: /etc/locale.gen
+    regexp: '^#en_US.UTF-8 UTF-8'
+    line: 'en_US.UTF-8 UTF-8'
+  notify: generate locales
+
+- name: create locale.conf
+  copy:
+    src: locale.conf
+    dest: /etc/locale.conf
+
+- name: create Pacman reflector hook
+  copy:
+    src: mirrorupgrade.hook
+    dest: /etc/pacman.d/hooks/mirrorupgrade.hook
+  notify: configure Pacman mirror list

@@ -1,0 +1,14 @@
+- name: install systemdboot
+  command: bootctl install
+
+- name: enable network time sync
+  command: timedatectl set-ntp true
+
+- name: sync hardware clock
+  command: hwclock --systohc
+
+- name: generate locales
+  command: locale-gen
+
+- name: configure Pacman mirror list
+  command: reflector --country 'United States' --protocol https --age 24 --sort rate --save /etc/pacman.d/mirrorlist
