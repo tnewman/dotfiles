@@ -1,4 +1,4 @@
-- name: installing base packages
+- name: install base packages
   pacman:
     name:
       - amd-ucode

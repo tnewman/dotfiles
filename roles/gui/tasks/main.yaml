@@ -1,0 +1,12 @@
+- name: install GUI packages
+  pacman:
+    name:
+      - gdm
+      - gnome
+    state: present
+
+- name: enable GDM
+  systemd:
+    name: gdm
+    state: started
+    enabled: yes

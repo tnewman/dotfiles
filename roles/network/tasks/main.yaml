@@ -1,0 +1,12 @@
+- name: install network packages
+  pacman:
+    name:
+      - networkmanager
+    state: present
+  notify: restart networkmanager
+
+- name: start and enable NetworkManager
+  systemd:
+    name: NetworkManager
+    state: started
+    enabled: yes
